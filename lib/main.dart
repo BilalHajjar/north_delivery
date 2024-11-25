@@ -23,6 +23,10 @@ void main() async{
    widget=OnBoardingScreen();
  } else if(token==null)
    {
+     int x=0;
+     String y="regitser"
+;     widget=LoginScreens();
+      y="forget";
      widget=LoginScreens();
    }
  else{
@@ -33,7 +37,6 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   final Widget widget;
-
   const MyApp({super.key, required this.widget});
   @override
   Widget build(BuildContext context) {
