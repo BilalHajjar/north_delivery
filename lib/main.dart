@@ -15,6 +15,7 @@ import 'presentation/admin/user_maneger/screens/users_screen.dart';
 String? token;
 
 void main() async{
+  int o=5;
   WidgetsFlutterBinding.ensureInitialized();
  bool? onBoarding= await CacheHelper().getDataBool(key: 'onBoarding');
   // token= await CacheHelper().getDataString(key: 'token');
@@ -29,6 +30,7 @@ void main() async{
       y="forget";
      widget=LoginScreens();
    }
+
  else{
    widget =LoginScreens();
  }
