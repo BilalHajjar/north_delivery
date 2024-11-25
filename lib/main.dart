@@ -15,6 +15,7 @@ import 'presentation/admin/user_maneger/screens/users_screen.dart';
 String? token;
 
 void main() async{
+  int o=5;
   WidgetsFlutterBinding.ensureInitialized();
  bool? onBoarding= await CacheHelper().getDataBool(key: 'onBoarding');
   // token= await CacheHelper().getDataString(key: 'token');
@@ -23,8 +24,13 @@ void main() async{
    widget=OnBoardingScreen();
  } else if(token==null)
    {
+     int x=0;
+     String y="regitser"
+;     widget=LoginScreens();
+      y="forget";
      widget=LoginScreens();
    }
+
  else{
    widget =LoginScreens();
  }
@@ -33,7 +39,6 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   final Widget widget;
-
   const MyApp({super.key, required this.widget});
   @override
   Widget build(BuildContext context) {
