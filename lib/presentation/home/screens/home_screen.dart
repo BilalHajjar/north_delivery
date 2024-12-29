@@ -1,43 +1,55 @@
 import 'package:delivary/presentation/admin/setting/controller/setting_controller.dart';
+import 'package:delivary/presentation/admin/store/screens/store_screen.dart';
+import 'package:delivary/presentation/admin/user_maneger/model/users_model.dart';
+import 'package:delivary/presentation/home/components/custom_drawer.dart';
+import 'package:delivary/presentation/home/controller/home_controller.dart';
+import 'package:delivary/presentation/store_owner/products/screens/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../admin/ads_maneger/screens/ads_screen.dart';
+import '../../admin/orders/screen/order_Admin_screen.dart';
 import '../../admin/setting/srceen/setting_screen.dart';
 import '../../admin/user_maneger/screens/users_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+class HomeAdminScreen extends StatelessWidget {
+  HomeAdminScreen({super.key, required this.userModel});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  final UserModel userModel;
+  List<Widget> adminScreens = [
+    const OrderAdminScreen(),
+    const StoreScreen(),
+    UsersScreen(),
+    AdsScreen(),
+    SettingScreen()
+  ];
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<Widget> adminScreens = [UsersScreen(), AdsScreen(), SettingScreen()];
+  List<String> appBar = [
+     'إدارة الطلبات',
+    'إدارة المتاجر',
+    'إدارة المستخدمين',
+    'إدارة الإعلانات',
+    'إدارة التواصل'
+  ];
 
-  int currentScreen = 0;
-
-SettingController controller=Get.put( SettingController());
+  SettingController controller = Get.put(SettingController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: adminScreens[currentScreen],
-
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex:currentScreen,
-          onTap: (i){
-            setState(() {
-
-              currentScreen=i;
-            });
-          },
-          items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.groups), label: 'المستخدمين'),
-        BottomNavigationBarItem(icon: Icon(Icons.image), label: 'الاعلانات'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'الاعدادات')
-      ]),
+      appBar: AppBar(title: GetBuilder(
+        init:HomeController() ,
+        builder: ( logic) {
+          return Text(appBar[logic.currentScreen]);
+        },
+      ),),
+      body: GetBuilder(
+        init:HomeController() ,
+        builder: ( logic) {
+          return adminScreens[logic.currentScreen];
+        },
+      ),
+      endDrawer: Drawer(child: CustomAdminDrawer(userModel: userModel)),
     );
   }
 }

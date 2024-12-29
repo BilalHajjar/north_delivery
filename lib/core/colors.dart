@@ -8,6 +8,7 @@ class AppColors {
   static const Color error = Colors.red;
   static const Color blackColor = Colors.black;
   static const Color grey = Colors.grey;
+  static  Color splash = Colors.grey.shade200;
   // static Color blackColor40 = Colors.black.withOpacity(60);
   // static Color blackColor60 = Colors.black.withOpacity(40);
   // static Color blackColor20 = Colors.black.withOpacity(20);

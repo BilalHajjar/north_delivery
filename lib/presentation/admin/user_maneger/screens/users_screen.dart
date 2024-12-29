@@ -15,9 +15,9 @@ class UsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('المستخدمين'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('المستخدمين'),
+      // ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Get.to(AddUserScreen());
@@ -30,14 +30,17 @@ class UsersScreen extends StatelessWidget {
         }
         return Directionality(
           textDirection: TextDirection.rtl,
-          child: ListView.builder(
-            itemCount: controller.usersList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return UserComponent(
-                controller: controller,
-                userModel: controller.usersList[index],
-              );
-            },
+          child: RefreshIndicator(
+            onRefresh: () async{ controller.fetchUsers(); },
+            child: ListView.builder(
+              itemCount: controller.usersList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return UserComponent(
+                  controller: controller,
+                  userModel: controller.usersList[index],
+                );
+              },
+            ),
           ),
         );
       }),

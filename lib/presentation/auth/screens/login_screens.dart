@@ -12,6 +12,46 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../components/switch_component.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+Future<void> signInWithGoogle() async {
+  try {
+    // تسجيل الدخول إلى Google
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+
+      // الحصول على التوكن
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken != null) {
+        // استدعاء الـ API مع التوكن
+        final response = await http.post(
+          Uri.parse('https://northdeliveryservices.com/api/auth/google/callback'),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: '{"token": "$idToken"}',
+        );
+
+        if (response.statusCode == 200) {
+          // نجاح الطلب
+          print('Login successful: ${response.body}');
+        } else {
+          // فشل الطلب
+          print('Failed to login: ${response.statusCode}');
+        }
+      }
+    }
+  } catch (error) {
+    print('Error during Google sign-in: $error');
+  }
+}
 
 bool rememberMe = true;
 
@@ -130,7 +170,10 @@ class LoginScreens extends StatelessWidget {
                       );
                     }),
                     const SizedBox(height: 20),
-                    OutLineButton(icn: FontAwesomeIcons.google, text: 'سجل باستخدام غوغل', func: () {  },),
+                    OutLineButton(icn: FontAwesomeIcons.google, text: 'سجل باستخدام غوغل', func: () {
+                      signInWithGoogle();
+
+                    },),
                     const SizedBox(height: 30),
 
                     // Register

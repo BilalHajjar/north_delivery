@@ -165,32 +165,32 @@ class RegisterScreen extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       // Register
-                      Center(
-                        child: RichText(
-                          text: TextSpan(
-                            text: "لديك حساب سابق؟   ",
-                            style: const TextStyle(
-                                color: Colors.black, fontFamily: 'FontApp'),
-                            children: [
-                              TextSpan(
-                                text: 'سجل الآن',
-                                style: const TextStyle(
-                                    color: Colors.orange,
-                                    fontFamily: 'FontApp'),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginScreens()),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      // Center(
+                      //   child: RichText(
+                      //     text: TextSpan(
+                      //       text: "لديك حساب سابق؟   ",
+                      //       style: const TextStyle(
+                      //           color: Colors.black, fontFamily: 'FontApp'),
+                      //       children: [
+                      //         TextSpan(
+                      //           text: 'سجل الآن',
+                      //           style: const TextStyle(
+                      //               color: Colors.orange,
+                      //               fontFamily: 'FontApp'),
+                      //           recognizer: TapGestureRecognizer()
+                      //             ..onTap = () {
+                      //               Navigator.pushReplacement(
+                      //                 context,
+                      //                 MaterialPageRoute(
+                      //                     builder: (context) => LoginScreens()),
+                      //               );
+                      //             },
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 20),
                     ],
                   ),
                 ),

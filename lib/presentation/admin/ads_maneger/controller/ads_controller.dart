@@ -53,13 +53,14 @@ class AdsController extends GetxController {
    try {
       final response =
           await ApiConnect().postDataFile('ads', {}, file: imagePath);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
+        Get.back();
         fetchAds();
       } else {
-        showErrorSnackbar(context, 'فشل ارسال الصورة');
+        appErrorMessage(context, '${jsonDecode(response.body)['message']}');
       }
     }catch(e){
-    showErrorSnackbar(context, 'تحقق من اتصالك');
+    appErrorMessage(context, 'تحقق من اتصالك');
 
     }
   }
@@ -70,7 +71,6 @@ class AdsController extends GetxController {
     try {
       final response =
           await ApiConnect().patchData('ads/$adId/toggle-status', {});
-      print(response.statusCode);
       if (response.statusCode == 200) {
         int index = adsList.indexWhere((ad) => ad.id == adId);
         if (adsList[index].isActive == 1) {
@@ -119,15 +119,12 @@ class AdsController extends GetxController {
         imagePath = File(image.path);
 
         // الصورة تم اختيارها بنجاح
-        print("Image path: ${image.path}");
         // يمكنك استخدام الصورة هنا أو تخزينها
       } else {
         // المستخدم لم يختار أي صورة
-        print("No image selected");
       }
     } catch (e) {
       // معالجة الأخطاء
-      print("Error picking image: $e");
     } finally {
       update();
     }

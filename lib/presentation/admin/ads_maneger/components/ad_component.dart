@@ -75,7 +75,7 @@ class AdsComponent extends StatelessWidget {
 }
 
 void showAdDialog(BuildContext context) {
-  final TextEditingController imageController = TextEditingController();
+  // final TextEditingController imageController = TextEditingController();
   AdsController controller = Get.find();
   showDialog(
     context: context,

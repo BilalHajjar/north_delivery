@@ -12,11 +12,12 @@ class AdsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('إدارة الإعلانات'),
-        centerTitle: true,
-
-      ), floatingActionButton: FloatingActionButton.extended(onPressed: () => showAdDialog(context), label: Text('إضافة إعلان'),),
+      // appBar: AppBar(
+      //   title: const Text('إدارة الإعلانات'),
+      //   centerTitle: true,
+      //
+      // ),
+      floatingActionButton: FloatingActionButton.extended(onPressed: () => showAdDialog(context), label: Text('إضافة إعلان'),),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

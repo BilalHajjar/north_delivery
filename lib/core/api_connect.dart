@@ -2,80 +2,92 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:delivary/core/cache_helper.dart';
 import 'package:delivary/main.dart';
+import 'package:delivary/presentation/auth/screens/login_screens.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 
 import 'package:http_parser/http_parser.dart';
 
 class ApiConnect {
-  // تحديد المدة القصوى 30 ثانية
   static const int timeoutDuration = 30;
+  String baseUrl='https://northdeliveryservices.com/api';
 
   Future<http.Response> getData(String url) async {
-    print('statring get /$url');
     try {
       final response = await http
           .get(
-        Uri.parse('http://192.168.1.6:8000/api/$url'),
+        Uri.parse('$baseUrl/$url'),
         headers: <String, String>{
           'Accept': 'application/json',
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization':
-          'Bearer 2|Lzbji78JbbU9O5EtmhYCOYfDczOpL9gZ0q4Jedc99a3311f3'
+          'Bearer $token'
         },
       )
           .timeout(Duration(seconds: timeoutDuration)); // إضافة timeout
-
+      if(response.statusCode==401)
+        {
+          CacheHelper.removeData(key: 'token');
+          Get.offAll(LoginScreens());
+        }
       return response;
     } on http.ClientException catch (e) {
-      print("Client Exception: $e");
       rethrow;
     } on TimeoutException catch (_) {
-      print("Request timeout");
       throw Exception("Request timeout");
     }
   }
   Future<http.Response> deleteData(String url) async {
-    print('statring get /$url');
     try {
       final response = await http
           .delete(
-        Uri.parse('http://192.168.1.6:8000/api/$url'),
+        Uri.parse('$baseUrl/$url'),
         headers: <String, String>{
           'Accept': 'application/json',
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization':
-          'Bearer 2|Lzbji78JbbU9O5EtmhYCOYfDczOpL9gZ0q4Jedc99a3311f3'
+          'Bearer $token'
         },
       )
           .timeout(Duration(seconds: timeoutDuration)); // إضافة timeout
 
       return response;
     } on http.ClientException catch (e) {
-      print("Client Exception: $e");
       rethrow;
     } on TimeoutException catch (_) {
-      print("Request timeout");
       throw Exception("Request timeout");
     }
   }
-
-  Future<http.Response> postDataFile(String url, Map<String, String> body, {File? file, String? mimeType}) async {
-    final uri = Uri.parse('https://api.syriaa-card.com/api/$url');
+  Future<http.Response> postDataFile(String url, Map<String, dynamic> body, {File? file, String? mimeType}) async {
+    final uri = Uri.parse('$baseUrl/$url');
     final headers = {
       'Accept': 'application/json',
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization':
-      'Bearer 2|Lzbji78JbbU9O5EtmhYCOYfDczOpL9gZ0q4Jedc99a3311f3'
+      'Content-Type': 'application/x-www-form-urlencoded',  // تغيير نوع المحتوى إلى form-urlencoded
+      'Authorization': 'Bearer $token'
     };
 
     try {
       var request = http.MultipartRequest('POST', uri)
-        ..headers.addAll(headers)
-        ..fields.addAll(body);
+        ..headers.addAll(headers);
 
+      // إضافة البيانات إلى الـ fields مع التعامل مع المصفوفات
+      body.forEach((key, value) {
+        if (value is List) {
+          // إرسال المصفوفات كـ حقل منفصل لكل عنصر
+          for (var i = 0; i < value.length; i++) {
+            request.fields['${key}[$i]'] = value[i].toString();
+          }
+        } else {
+          request.fields[key] = value.toString();
+        }
+      });
+
+      // إضافة الملف إذا كان موجوداً
       if (file != null) {
         final imageFileName = file.path.split('/').last;
         final multipartFile = await http.MultipartFile.fromPath(
@@ -103,24 +115,21 @@ class ApiConnect {
     try {
       final response = await http
           .post(
-        Uri.parse('http://192.168.1.6:8000/api/$url'),
+        Uri.parse('$baseUrl/$url'),
         headers: <String, String>{
           'Accept': 'application/json',
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization':
-          'Bearer 2|Lzbji78JbbU9O5EtmhYCOYfDczOpL9gZ0q4Jedc99a3311f3'
+          'Bearer $token'
         },
         body: jsonEncode(body),
       )
           .timeout(Duration(seconds: timeoutDuration)); // إضافة timeout
 
-      print(response.body);
       return response;
     } on http.ClientException catch (e) {
-      print("Client Exception: $e");
       rethrow;
     } on TimeoutException catch (_) {
-      print("Request timeout");
       throw Exception("Request timeout");
     }
   }
@@ -128,24 +137,21 @@ class ApiConnect {
     try {
       final response = await http
           .patch(
-        Uri.parse('http://192.168.1.6:8000/api/$url'),
+        Uri.parse('$baseUrl/$url'),
         headers: <String, String>{
           'Accept': 'application/json',
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization':
-          'Bearer 2|Lzbji78JbbU9O5EtmhYCOYfDczOpL9gZ0q4Jedc99a3311f3'
+          'Bearer $token'
         },
         body: jsonEncode(body),
       )
           .timeout(Duration(seconds: timeoutDuration)); // إضافة timeout
 
-      print(response.body);
       return response;
     } on http.ClientException catch (e) {
-      print("Client Exception: $e");
       rethrow;
     } on TimeoutException catch (_) {
-      print("Request timeout");
       throw Exception("Request timeout");
     }
   }
@@ -153,69 +159,44 @@ class ApiConnect {
     try {
       final response = await http
           .put(
-        Uri.parse('http://192.168.1.6:8000/api/$url'),
+        Uri.parse('$baseUrl/$url'),
         headers: <String, String>{
           'Accept': 'application/json',
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization':
-          'Bearer 2|Lzbji78JbbU9O5EtmhYCOYfDczOpL9gZ0q4Jedc99a3311f3'
+          'Bearer $token'
         },
         body: jsonEncode(body),
       )
           .timeout(Duration(seconds: timeoutDuration)); // إضافة timeout
 
-      print(jsonDecode(response.body));
       return response;
     } on http.ClientException catch (e) {
-      print("Client Exception: $e");
       rethrow;
     } on TimeoutException catch (_) {
-      print("Request timeout");
       throw Exception("Request timeout");
     }
   }
 
 }
 
-void showErrorSnackbar(BuildContext context, String message) {
-  final snackBar = SnackBar(
-    content: AnimatedContainer(
-      height: 70,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.error_outline,
-            color: Colors.white,
-          ),
-          const SizedBox(width: 10), // مسافة بين الأيقونة والنص
-          // النص
-          Expanded(
-            child: Text(
-              message,
+void appErrorMessage(BuildContext context, String message,{String title='خطأ'}) {
+  var snackBar = SnackBar(
+    elevation: 0,
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.transparent,
+    content: Directionality(textDirection: TextDirection.rtl,
+      child: AwesomeSnackbarContent(
+        title: title,
+        message:
+        message,
 
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
+        contentType:title=='تم'? ContentType.success :ContentType.failure,
       ),
     ),
-    backgroundColor: Colors.transparent,
-    behavior: SnackBarBehavior.floating,
-    margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-    duration: const Duration(seconds: 4),
   );
 
-  // عرض الـ SnackBar
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(snackBar);
 }

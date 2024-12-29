@@ -12,6 +12,7 @@ class SettingController extends GetxController {
     getSetting();
     super.onInit();
   }
+
   SettingModel? settingModel;
  void putSetting(context, {required String phone, required String facebook}) async {
     loadingPut.value=true;
@@ -23,12 +24,14 @@ class SettingController extends GetxController {
       if(facebook!='')
       "facebook": facebook}).then((val) {
       if (val.statusCode == 200 || val.statusCode == 201) {
-        showErrorSnackbar(context, 'تم التعديل بنجاح');
+        appErrorMessage(context, 'تم التعديل بنجاح');
+        settingModel!.phone=phone;
+        settingModel!.facebook=facebook;
       } else {
-        showErrorSnackbar(context, '${jsonDecode(val.body)['errors']}');
+        appErrorMessage(context, '${jsonDecode(val.body)['errors']}');
       }
     });}catch(e){
-      showErrorSnackbar(context, 'تحقق من اتصالك بالشبكة');
+      appErrorMessage(context, 'تحقق من اتصالك بالشبكة');
 
     }finally{
       loadingPut.value=false;
@@ -39,7 +42,6 @@ class SettingController extends GetxController {
     try {
 
       final response = await ApiConnect().getData('settings');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body)['data'];
         settingModel =
