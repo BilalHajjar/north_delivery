@@ -4,6 +4,7 @@ import 'package:delivary/core/api_connect.dart';
 import 'package:delivary/core/colors.dart';
 import 'package:delivary/presentation/user/cart/model/card_model.dart';
 import 'package:delivary/presentation/user/orders/model/order_user_model.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 
 class OrderUserComponent extends StatefulWidget {
@@ -108,10 +109,10 @@ class _OrderUserComponentState extends State<OrderUserComponent> {
           // إذا كانت الحاوية موسعة، قم بعرض المزيد من البيانات
           AnimatedContainer(
             width: double.infinity,
-            duration: Duration(milliseconds: 150), // مدة التمدد البطيء
+            duration: const Duration(milliseconds: 150), // مدة التمدد البطيء
             height: _expanded ? 120 + (cardList.length * 80).toDouble() : 0, // إضافة مساحة للعناصر المحملة
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(10),
                 bottomRight: Radius.circular(10),
@@ -127,15 +128,16 @@ class _OrderUserComponentState extends State<OrderUserComponent> {
                   // عرض العناصر المحملة في القائمة
                   ...cardList.map((card) {
                     return Card(
-                      color: Color(0xfffdf7e4),
+                      color: Color(0xfffdf9ed),
                       elevation: 3,
                       margin: EdgeInsets.symmetric(vertical: 5),
                       child: ListTile(
                         leading: SizedBox(
                             width: 50,
+
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image(image: NetworkImage(card.product!.imageUrl!)))),
+                                child: CustomImage(image: card.product!.imageUrl!))),
                         title: Text(card.product?.name ?? 'منتج غير معروف'),
                         subtitle: Text('الكمية: ${card.quantity}'),
                         trailing: Text('\$${card.product?.price}'),

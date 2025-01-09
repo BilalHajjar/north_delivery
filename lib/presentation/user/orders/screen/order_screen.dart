@@ -12,11 +12,11 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OrderController controller = Get.put(OrderController());
-    controller.fetchOrders();  // استدعاء الدالة لجلب البيانات عند تحميل الشاشة
+   // استدعاء الدالة لجلب البيانات عند تحميل الشاشة
 
     return GetBuilder<OrderController>(
       builder: (controller) {
-        if (controller.waitOrder) {
+        if (controller.waitOrder&&controller.currentPage==1) {
           return Center(child: CircularProgressIndicator());  // أثناء التحميل
         } else if (controller.orderList.isEmpty) {
           return NotFound(txt: 'لا يوجد طلبات');  // في حالة لا توجد بيانات
@@ -24,10 +24,16 @@ class OrderScreen extends StatelessWidget {
         // عرض قائمة الطلبات
         return Directionality(textDirection: TextDirection.rtl,
           child: ListView.builder(
-            itemCount: controller.orderList.length,
-            itemBuilder: (context, index) {
+            controller: controller.scroll,
+            itemCount: controller.orderList.length+1,
+            itemBuilder: (context, index) { if(index<controller.orderList.length) {
               final order = controller.orderList[index];
-              return OrderUserComponent(order: order);
+              return OrderUserComponent(order: order); } else {
+                  if(controller.hasMode==null)
+                    return SizedBox();
+                  else
+                  return Center(child: CircularProgressIndicator(),);
+                }
             },
           ),
         );

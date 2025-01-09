@@ -41,15 +41,15 @@ Future<void> signInWithGoogle() async {
 
         if (response.statusCode == 200) {
           // نجاح الطلب
-          print('Login successful: ${response.body}');
+          // print('Login successful: ${response.body}');
         } else {
           // فشل الطلب
-          print('Failed to login: ${response.statusCode}');
+          // print('Failed to login: ${response.statusCode}');
         }
       }
     }
   } catch (error) {
-    print('Error during Google sign-in: $error');
+    // print('Error during Google sign-in: $error');
   }
 }
 
@@ -169,11 +169,11 @@ class LoginScreens extends StatelessWidget {
                         },
                       );
                     }),
-                    const SizedBox(height: 20),
-                    OutLineButton(icn: FontAwesomeIcons.google, text: 'سجل باستخدام غوغل', func: () {
-                      signInWithGoogle();
-
-                    },),
+                    // const SizedBox(height: 20),
+                    // OutLineButton(icn: FontAwesomeIcons.google, text: 'سجل باستخدام غوغل', func: () {
+                    //   signInWithGoogle();
+                    //
+                    // },),
                     const SizedBox(height: 30),
 
                     // Register

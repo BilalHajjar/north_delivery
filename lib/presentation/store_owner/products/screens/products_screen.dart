@@ -17,17 +17,19 @@ class ProductsScreen extends StatelessWidget {
         onPressed: () {
           Get.to(AddProductScreen());
         },
-        label: Text('إضافة منتج'),
+        label: const Text('إضافة منتج'),
       ),
       body: Obx(() {
-        if (controller.isLoading.value) {
+        if (controller.isLoading.value&&controller.currentPage==1) {
           return const Center(child: CircularProgressIndicator());
         }
         return Directionality(
           textDirection: TextDirection.rtl,
           child: ListView.builder(
-            itemCount: controller.productList.length,
+            controller: controller.scroll,
+            itemCount: controller.productList.length+1,
             itemBuilder: (BuildContext context, int index) {
+                if(index<controller.productList.length) {
               return InkWell(
                   onTap: () {
                     Get.to(AddProductScreen(
@@ -36,6 +38,12 @@ class ProductsScreen extends StatelessWidget {
                   },
                   child:
                       ProductCard(productModel: controller.productList[index]));
+               } else {
+                  if(controller.hasMode==null)
+                    return SizedBox();
+                  else
+                  return Center(child: CircularProgressIndicator(),);
+                }
             },
           ),
         );
@@ -67,9 +75,9 @@ class ProductCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Hero(
-                tag: productModel.id ?? 'defaultTag', // استخدم معرف المنتج كـ Hero Tag
+                tag: '${productModel.id}' ?? 'defaultTag', // استخدم معرف المنتج كـ Hero Tag
                 child: Image.network(
-                  productModel.imageUrl!,
+                  '${productModel.imageUrl!}',
                   width: 120,
                   height: 120,
                   fit: BoxFit.cover,
@@ -140,7 +148,7 @@ class ProductCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   // السعر
                   Text(
-                    '\$' + productModel.price!,
+                    'LT ' + productModel.price!,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

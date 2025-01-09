@@ -5,6 +5,7 @@ import 'package:delivary/core/api_connect.dart';
 import 'package:delivary/presentation/store_owner/products/controller/product_controller.dart';
 import 'package:delivary/presentation/store_owner/products/model/product_model.dart';
 import 'package:delivary/presentation/user/product/controller/product_user_controller.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -54,29 +55,10 @@ class ProductUserComponent extends StatelessWidget {
                                 Colors.grey,
                                 BlendMode.saturation,
                               ),
-                        child: Hero(
-                          tag: 'product-${productModel.id}',
-                          child: Image.network(
-                            productModel.imageUrl!,
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                            errorBuilder: (con, ob, t) {
-                              return Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: AppColors.grey.withOpacity(0.5),
-                                ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.image_search,
-                                    size: 30,
-                                  ),
-                                ),
-                              );
-                            },
+                        child: SizedBox(
+                          width: 120,
+                          height: 120,
+                          child: CustomImage(image: productModel.imageUrl!,
                           ),
                         ),
                       ),
@@ -116,7 +98,8 @@ class ProductUserComponent extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                      ),
+                      ),maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
                     // الوصف
@@ -126,17 +109,17 @@ class ProductUserComponent extends StatelessWidget {
                         fontSize: 14,
                         color: Colors.grey,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
                     // السعر
                     Text(
-                      '\$' + productModel.price!,
+                      'LT ' + productModel.price!,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Colors.teal,
                       ),
                     ),
                     const SizedBox(height: 8),

@@ -3,8 +3,11 @@ import 'package:delivary/core/not_found.dart';
 import 'package:delivary/presentation/admin/store/controller/store_controller.dart';
 import 'package:delivary/presentation/admin/store/model/store_model.dart';
 import 'package:delivary/presentation/admin/store/screens/add_store_screen.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../user/product/screen/product_user_screen.dart';
 
 class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
@@ -21,36 +24,46 @@ class StoreScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
           label: Text('إضافة متجر'),
           onPressed: () {
-            Get.to(AddStoreScreen(
-              storeController: controller,
-            ));
+            Get.to(AddStoreScreen());
           }),
       body: Obx(() {
         // Show loading indicator while fetching data
-        if (controller.waitStoreList.value) {
+        if (controller.waitStoreList.value && controller.currentPage == 1) {
           return Center(child: CircularProgressIndicator());
-        }
-else if(controller.storeList.length==0)
-  return NotFound(txt: 'لا يوجد متاجر');
+        } else if (controller.storeList.length == 0)
+          return NotFound(txt: 'لا يوجد متاجر');
 
         return Directionality(
           textDirection: TextDirection.rtl,
           child: RefreshIndicator(
-            onRefresh: () async{ controller.getStores(); },
+            onRefresh: () async {
+              controller.storeList = [];
+              controller.currentPage = 1;
+              controller.getStores();
+            },
             child: ListView.builder(
-              itemCount: controller.storeList.length,
+              controller: controller.scroll,
+              itemCount: controller.storeList.length + 1,
               itemBuilder: (BuildContext context, int index) {
-                var store = controller.storeList[index]; // Get the store at index
-
-                return InkWell(
-                  onTap: () {
-                    Get.to(AddStoreScreen(
-                      storeModel: controller.storeList[index],
-                      storeController: controller,
-                    ));
-                  },
-                  child: StoreComponent(store: store),
-                );
+                // Get the store at index
+                if (index < controller.storeList.length) {
+                  var store = controller.storeList[index];
+                  return GestureDetector(
+                      onTap: () {
+                        Get.to(() => AddStoreScreen(
+                              storeModel: store,
+                            ));
+                      },
+                      child: StoreComponent(store: store));
+                } else {
+                  if (controller.hasMode == null) {
+                    return const SizedBox();
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }
               },
             ),
           ),
@@ -71,8 +84,8 @@ class StoreComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -88,23 +101,17 @@ class StoreComponent extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-                width: 100,
-                height: 130,
-                child:
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Hero(tag: 'store-${store.id}',
-                      child: Image.network(
-                        store.imageUrl!,
-                        fit: BoxFit.fitHeight,
-                        errorBuilder: (_, p, o) {
-                          return Icon(Icons.image_search);
-                        },
-                      ),
-                    ),
+              width: 100,
+              height: 130,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Hero(
+                  tag: 'store-${store.id}',
+                  child: CustomImage(image: store.imageUrl!),
                 ),
+              ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Expanded(
@@ -115,15 +122,23 @@ class StoreComponent extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        ' ${store.name}', // Display store name
-                        style: const TextStyle(
-                            fontSize: 22,
-                            // fontWeight: FontWeight.bold,
-                            color: Colors.black87),
+                      Expanded(
+                        child: Text(
+                          ' ${store.name}', // Display store name
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 18,
+                              // fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
                       ),
-                      const Spacer(),
-                      const Icon(Icons.location_on,size: 12,color: AppColors.primaColor,),
+                      // const Spacer(),
+                      const Icon(
+                        Icons.location_on,
+                        size: 12,
+                        color: AppColors.primaColor,
+                      ),
                       Text(
                         ' ${store.region!.name!}', // Display store name
                         style: const TextStyle(

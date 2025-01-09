@@ -33,10 +33,11 @@ class AdsController extends GetxController {
         adsList.value =
             data.map<AdsModel>((ad) => AdsModel.fromJson(ad)).toList();
       } else {
+
         Get.snackbar('خطأ', jsonDecode(response.body)['message']);
       }
     } catch (e) {
-      Get.snackbar('خطأ', 'تعذر جلب الإعلانات. تحقق من اتصال الشبكة.');
+        Get.snackbar('خطأ', 'تعذر جلب الإعلانات. تحقق من اتصال الشبكة.');
     } finally {
       isLoading.value = false;
     }
@@ -47,7 +48,8 @@ class AdsController extends GetxController {
   /// إضافة إعلان جديد
   Future<void> addAd(context) async {
     if (imagePath == null) {
-      Get.snackbar('خطأ', 'يرجى اختيار صورة قبل الإرسال.');
+
+      appErrorMessage(context, 'يرجى اختيار صورة قبل الإرسال.');
       return;
     }
    try {
@@ -66,7 +68,7 @@ class AdsController extends GetxController {
   }
 
   /// تبديل حالة الإعلان (تفعيل/تعطيل)
-  Future<void> toggleAdStatus(int adId) async {
+  Future<void> toggleAdStatus(int adId,context) async {
     isLoading.value = true;
     try {
       final response =
@@ -79,30 +81,32 @@ class AdsController extends GetxController {
       else{
           adsList[index].isActive=1; // تحديث الإعلان في القائمة
         }
-        Get.snackbar('نجاح', 'تم تبديل حالة الإعلان بنجاح.');
+        appErrorMessage(context, 'تم تبديل حالة الإعلان بنجاح.',title: 'تم');
+
       } else {
-        Get.snackbar('خطأ', jsonDecode(response.body)['message']);
+        appErrorMessage(context, jsonDecode(response.body)['message']);
+
       }
     } catch (e) {
-      Get.snackbar('خطأ', 'تعذر تحديث حالة الإعلان. تحقق من اتصال الشبكة.');
+      appErrorMessage(context, 'تعذر تحديث حالة الإعلان. تحقق من اتصال الشبكة.');
     } finally {
       isLoading.value = false;
     }
   }
 
   /// حذف إعلان
-  Future<void> deleteAd(int adId) async {
+  Future<void> deleteAd(int adId,context) async {
     isLoading.value = true;
     try {
       final response = await ApiConnect().deleteData('ads/$adId',);
       if (response.statusCode == 200) {
         adsList.removeWhere((ad) => ad.id == adId); // حذف الإعلان من القائمة
-        Get.snackbar('نجاح', 'تم حذف الإعلان بنجاح.');
+        appErrorMessage(context, 'تم حذف الإعلان بنجاح.');
       } else {
-        Get.snackbar('خطأ', jsonDecode(response.body)['message']);
+        appErrorMessage(context, jsonDecode(response.body)['message']);
       }
     } catch (e) {
-      Get.snackbar('خطأ', 'تعذر حذف الإعلان. تحقق من اتصال الشبكة.');
+      appErrorMessage(context, 'تعذر حذف الإعلان. تحقق من اتصال الشبكة.');
     } finally {
       isLoading.value = false;
     }

@@ -28,7 +28,9 @@ class CartController extends GetxController {
         .then((val) {
           if(val.statusCode==200||val.statusCode==201){
             fetchCartItems();
-            appErrorMessage(context, 'تم ارسال الطلب بنجاح');
+            Get.back();
+            appErrorMessage(context, 'تم ارسال الطلب بنجاح',title: 'تم');
+
           }else{appErrorMessage(context, jsonDecode(val.body)['message']);}
     })
         .catchError((e) {});

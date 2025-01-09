@@ -1,6 +1,7 @@
 import 'package:delivary/presentation/store_owner/products/controller/product_controller.dart';
 import 'package:delivary/presentation/store_owner/products/screens/products_screen.dart';
 import 'package:delivary/presentation/user/product/controller/product_user_controller.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,9 +21,9 @@ class ProductUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // استدعاء `getAllProduct` مرة واحدة عند بدء الصفحة
-    controller.getAllProduct(store.id!);
+    controller.id = store.id!;
 
+    controller.getAllProduct();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaColor,
@@ -32,7 +33,7 @@ class ProductUserScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-              // الانتقال إلى السلة
+              Get.to(CartScreen());
             },
           ),
         ],
@@ -43,7 +44,7 @@ class ProductUserScreen extends StatelessWidget {
           children: [
             // عرض تفاصيل المتجر
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(6.0),
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
@@ -65,26 +66,26 @@ class ProductUserScreen extends StatelessWidget {
                       tag: 'store-${store.id}',
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          store.imageUrl!,
-                          width: double.infinity,
+                        child: SizedBox(
                           height: 150,
-                          fit: BoxFit.cover,
+                          child: CustomImage(
+                            image: store.imageUrl!,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
-        
-                    // اسم المتجر
-                    Text(
-                      store.name ?? "اسم المتجر",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-        
+
+                    // // اسم المتجر
+                    // Text(
+                    //   store.name ?? "اسم المتجر",
+                    //   style: const TextStyle(
+                    //     fontSize: 20,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+
                     // وصف المتجر
                     if (store.description != null)
                       Text(
@@ -95,7 +96,7 @@ class ProductUserScreen extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(height: 8),
-        
+
                     // الموقع
                     if (store.region != null)
                       Row(
@@ -112,15 +113,17 @@ class ProductUserScreen extends StatelessWidget {
                         ],
                       ),
                     const SizedBox(height: 8),
-        
+
                     // التصنيفات
-                    if (store.categories != null && store.categories!.isNotEmpty)
+                    if (store.categories != null &&
+                        store.categories!.isNotEmpty)
                       Wrap(
                         spacing: 8,
                         children: store.categories!.map((category) {
                           return Chip(
                             label: Text(category.name ?? "بدون اسم"),
-                            backgroundColor: AppColors.primaColor.withOpacity(0.2),
+                            backgroundColor:
+                                AppColors.primaColor.withOpacity(0.2),
                           );
                         }).toList(),
                       ),
@@ -128,16 +131,17 @@ class ProductUserScreen extends StatelessWidget {
                 ),
               ),
             ),
-        
+
             // قائمة المنتجات
             Expanded(
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: Obx(() {
-                  if (controller.waitProduct.value) {
+                  if (controller.waitProduct.value &&
+                      controller.currentPage == 1) {
                     return const Center(child: CircularProgressIndicator());
                   }
-        
+
                   if (controller.productList.isEmpty) {
                     return const Center(
                       child: Text(
@@ -146,21 +150,25 @@ class ProductUserScreen extends StatelessWidget {
                       ),
                     );
                   }
-        
+
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
-                      // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      //   crossAxisCount: 2,
-                      //   crossAxisSpacing: 10,
-                      //   mainAxisSpacing: 10,
-                      //   childAspectRatio: 0.8,
-                      // ),
-                      itemCount: controller.productList.length,
+                      controller: controller.scroll,
+                      itemCount: controller.productList.length + 1,
                       itemBuilder: (BuildContext context, int index) {
-                        return ProductUserComponent(
-                          productModel: controller.productList[index],
-                        );
+                        if (index < controller.productList.length) {
+                          return ProductUserComponent(
+                            productModel: controller.productList[index],
+                          );
+                        } else {
+                          if (controller.hasMode == null)
+                            return SizedBox();
+                          else
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                        }
                       },
                     ),
                   );

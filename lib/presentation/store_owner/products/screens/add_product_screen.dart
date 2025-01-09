@@ -2,6 +2,7 @@ import 'package:delivary/core/colors.dart';
 import 'package:delivary/presentation/store_owner/products/controller/product_controller.dart';
 import 'package:delivary/presentation/store_owner/products/model/product_model.dart';
 import 'package:delivary/widgets/button_widget.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -232,20 +233,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ? Hero(
                     tag: widget.productModel!.id ?? 'defaultTag', // استخدم نفس Hero Tag
                     child: Center(
-                      child: Image.network(widget.productModel!.imageUrl!,
-                          errorBuilder: (con, ob, t) {
-                            return Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: AppColors.grey.withOpacity(0.5)),
-                                child: const Center(
-                                    child: Icon(
-                                      Icons.image_search,
-                                      size: 30,
-                                    )));
-                          }),
+                      child: CustomImage(image: widget.productModel!.imageUrl!,),
                     ),
                   )
                       : _image == null
@@ -284,11 +272,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return ButtonWidget(
                       text: widget.productModel == null ? 'إضافة' : 'تعديل',
                       onTap: () {
-                        widget.productModel == null ?   controller.addProduct(name: nameController.text,
+                        widget.productModel == null ?   controller.addProduct(context,name: nameController.text,
                             description: descriptionController.text,
                             price: priceController.text,
                             file: _image!,):
-                        controller.updateProduct(name: nameController.text,
+                        controller.updateProduct(context,name: nameController.text,
                             description: descriptionController.text,
                             price: priceController.text,
                             file: _image,

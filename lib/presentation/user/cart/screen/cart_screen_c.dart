@@ -1,5 +1,6 @@
 import 'package:delivary/core/not_found.dart';
 import 'package:delivary/widgets/button_widget.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -100,9 +101,7 @@ class CartScreen extends StatelessWidget {
                               child: SizedBox(
                                 width: 70,
                                 height: 70,
-                                child: Image.network(
-                                  '${cartItem.product!.imageUrl!}',
-                                  fit: BoxFit.cover,
+                                child: CustomImage(image:                                   '${cartItem.product!.imageUrl!}',
                                 ),
                               ),
                             ),

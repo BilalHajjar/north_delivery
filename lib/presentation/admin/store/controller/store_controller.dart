@@ -10,12 +10,19 @@ class StoreController extends GetxController {
   List<StoreModel> storeList = [];
   List<ListModel> userWithoutStoreList = [];
   List<ListModel> regionsList = [];
-  List<CategoryModel> categoriesList = [];
-
+  List<CategoryModel> categoriesList = [];int currentPage=1;
+ final scroll=ScrollController();
+ String? hasMode;
   @override
   onInit() {
     super.onInit();
     getStores();
+    scroll.addListener((){
+      if(scroll.position.maxScrollExtent==scroll.offset){
+
+          int page=++currentPage;
+          getStores(page:page++);
+    }});
   }
 
   RxBool waitStoreList = true.obs;
@@ -24,24 +31,30 @@ class StoreController extends GetxController {
     waitStoreList.value = true;
     try {
       final response = await ApiConnect().deleteData('stores/$id',);
-      if (response.statusCode == 200) {
-        storeList.removeWhere((ad) => ad.id == id); // حذف الإعلان من القائمة
-        Get.snackbar('نجاح', 'تم حذف المتجر بنجاح.');
+      if (response.statusCode == 200||response.statusCode == 201) {
+        storeList.removeWhere((ad) => ad.id == id);
+        appErrorMessage(context, 'تم حذف المتجر بنجاح.',title: 'تم');
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
-        Get.snackbar('خطأ', jsonDecode(response.body)['message']);
+        appErrorMessage(context, jsonDecode(response.body)['message']);
       }
     } catch (e) {
-      Get.snackbar('خطأ', 'تعذر حذف الإعلان. تحقق من اتصال الشبكة.');
+      appErrorMessage(context,'تعذر حذف الإعلان. تحقق من اتصال الشبكة.');
     } finally {
       waitStoreList.value = false;
     }
   }
-  getStores() async {storeList=[];
+  getStores({int page=1}) async {
+    if (page == 1)
+    {
+      storeList.clear();
+    }
     waitStoreList.value = true;
-    var response = await ApiConnect().getData('stores');
+    var response = await ApiConnect().getData('stores?page=$page');
     try {
+
+      hasMode = jsonDecode(response.body)['data']['next_page_url'];
       for (Map<String, dynamic> val in jsonDecode(response.body)['data']['data']) {
         storeList.add(StoreModel.fromJson(val));
       }
@@ -51,17 +64,6 @@ class StoreController extends GetxController {
     }
   }
 
-  getUserWithoutStore() async {
-    await ApiConnect().getData('store-owners/available').then((val) {
 
-    });
-  }
 
-  getRegions() async {
-    await ApiConnect().getData('regions').then((val) {});
-  }
-
-  getCategories() async {
-    await ApiConnect().getData('categories').then((val) {});
-  }
 }

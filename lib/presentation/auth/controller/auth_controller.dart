@@ -24,14 +24,14 @@ class AuthController extends GetxController {
   var isButtonEnabledForgetPassword = true.obs;
   int incrementForgetPassword = 1;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
-  void startCountdownSendEmail() {
+  void startCountdownSendEmail(context,{required String email}) {
+
+
     secondsRemainingSendEmail.value = 10 * incrementSendEmail;
+    sendVerificationCode(context,email: email);
     _timerSendEmail = Timer.periodic(const Duration(seconds: 1), (timer) {
+
       if (secondsRemainingSendEmail.value > 0) {
         secondsRemainingSendEmail.value--;
         isButtonEnabledSendEmail.value = false; // تعطيل الزر أثناء العداد
@@ -43,9 +43,11 @@ class AuthController extends GetxController {
     incrementSendEmail++;
   }
 
-  void startCountdownForgetPassword() {
+  void startCountdownForgetPassword(context,email) {
     secondsRemainingForgetPassword.value = 10 * incrementForgetPassword;
+    sendPasswordResetLink(context,email: '$email');
     _timerForgetPassword = Timer.periodic(const Duration(seconds: 1), (timer) {
+
       if (secondsRemainingForgetPassword.value > 0) {
         secondsRemainingForgetPassword.value--;
         isButtonEnabledForgetPassword.value = false; // تعطيل الزر أثناء العداد
@@ -119,6 +121,7 @@ class AuthController extends GetxController {
     }).then((value) {
       if (value.statusCode == 200 || value.statusCode == 201) {
         OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
         OneSignal.initialize('6f35037c-58d8-45f4-be58-a1865089f286');
         OneSignal.login('${jsonDecode(value.body)['user_id']}');
         // OneSignal.User.addAlias("email", "$email");
@@ -139,7 +142,8 @@ class AuthController extends GetxController {
       loginWait.value = false;
       appErrorMessage(context, 'تحقق من اتصالك بالشبكة');
     });
-  }googleLogin(
+  }
+  googleLogin(
     context, {
     required String email,
     required String password,
@@ -171,36 +175,25 @@ class AuthController extends GetxController {
     });
   }
 
-  // دالة تسجيل الخروج
-  logout() async {
-    await ApiConnect().postData('logout', {}).then((value) {
-      if (value.statusCode == 200 || value.statusCode == 201) {
-        // منطق النجاح
-      } else {
-        // منطق الفشل
-      }
-    });
-  }
-
   // دالة إرسال رمز التحقق
-  sendVerificationCode({
+  sendVerificationCode(context,{
     required String email,
   }) async {
     await ApiConnect().postData('send-verification-code', {
       "email": email,
     }).then((value) {
       if (value.statusCode == 200 || value.statusCode == 201) {
-        // منطق النجاح
+      appErrorMessage(context, 'تم اعادة طلب الكود',title: 'تم');
       } else {
-        // منطق الفشل
-      }
+
+            }
     });
   }
 
   RxBool verifyEmailWait = false.obs;
 
   // دالة التحقق من البريد الإلكتروني
-  verifyEmail({
+  verifyEmail(context,{
     required String email,
     required String code,
   }) async {
@@ -210,9 +203,11 @@ class AuthController extends GetxController {
       "code": code,
     }).then((value) {
       if (value.statusCode == 200 || value.statusCode == 201) {
-        // منطق النجاح
+
+        Get.offAll(LoginScreens());
+        appErrorMessage(context, jsonDecode(value.body)['message'],title: 'تم');
       } else {
-        // منطق الفشل
+        appErrorMessage(context, jsonDecode(value.body)['message']);
       }
       verifyEmailWait.value = false;
     }).catchError((e) {
@@ -233,7 +228,7 @@ class AuthController extends GetxController {
     }).then((value) {
       if (value.statusCode == 200 || value.statusCode == 201) {
         Navigator.push(context, MaterialPageRoute(builder: (_) {
-          return ResetPasswordScreen();
+          return ResetPasswordScreen(email: email,);
         }));
       } else {
         appErrorMessage(context, jsonDecode(value.body)['message']);
@@ -264,6 +259,8 @@ class AuthController extends GetxController {
       "password_confirmation": resetPasswordConfirmation,
     }).then((value) {
       if (value.statusCode == 200 || value.statusCode == 201) {
+        appErrorMessage(context, 'تمت إعادة تعيين كلمة المرور',title: 'تم');
+        Get.offAll(LoginScreens());
       } else {
         appErrorMessage(context, jsonDecode(value.body)['message']);
       }
@@ -288,29 +285,5 @@ class AuthController extends GetxController {
   }
 }
 
-sendPasswordResetLink({
-  required String email,
-}) async {
-  await ApiConnect()
-      .postData('send-password-reset-link', {"email": email}).then((value) {
-    if (value.statusCode == 200 || value.statusCode == 201) {
-    } else {}
-  });
-}
 
-resetPassword({
-  required String email,
-  required String code,
-  required String password,
-  required String passwordConfirmation,
-}) async {
-  await ApiConnect().postData('reset-password', {
-    "email": email,
-    "code": code,
-    "password": password,
-    "password_confirmation": passwordConfirmation
-  }).then((value) {
-    if (value.statusCode == 200 || value.statusCode == 201) {
-    } else {}
-  });
-}
+

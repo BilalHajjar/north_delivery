@@ -63,6 +63,7 @@ class HomeUserScreen extends StatelessWidget {
       ),
       bottomNavigationBar: Obx(
             () => BottomNavigationBar(
+              backgroundColor: AppColors.whiteColor,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.store_mall_directory),
@@ -79,6 +80,7 @@ class HomeUserScreen extends StatelessWidget {
           ],
           currentIndex: controller.current.value,
           onTap: (index) {
+            controller.tempForMySelectCategory=null;
             controller.changePage(index); // تحديث الصفحة
           },
         ),

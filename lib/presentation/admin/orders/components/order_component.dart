@@ -64,7 +64,6 @@ class _OrderComponentState extends State<OrderComponent> {
           children: [
             Text('الاسم: ${widget.order.user!.name! ?? "غير متوفر"}'),
             Text('العنوان: ${widget.order.address! ?? "غير متوفر"}'),
-            Text('الخريطة: ${widget.order.addressLink! ?? "غير متوفر"}'),
             Text('رقم الهاتف: ${widget.order.phoneNumber ?? "غير متوفر"}'),
             Text('القيمة: ${widget.order.totalPrice ?? "0"}'),
             Text('عدد العناصر: ${widget.order.orderItemsCount ?? 0}'),
@@ -100,7 +99,7 @@ class _OrderComponentState extends State<OrderComponent> {
               );
 
               if (confirm == true) {
-                await widget.controller.deleteOrder(widget.order.id!);
+                await widget.controller.deleteOrder(widget.order.id!,context);
               }
             } else if (action == 'copy') {
               // نسخ المحتويات إلى الحافظة

@@ -127,7 +127,7 @@ class AddStoreController extends GetxController {
       "categories": categories
     },file: file).then((val) {
       if (val.statusCode == 201||val.statusCode == 200||val.statusCode == 202) {
-        controller.getStores();
+        controller.getStores(page: 1);
         loadingAdd.value = false;Get.back();
       } else {
         appErrorMessage(context, jsonDecode(val.body)['message']);
@@ -156,15 +156,15 @@ class AddStoreController extends GetxController {
       },
           ).then((val) {
         if (val.statusCode == 201||val.statusCode == 200||val.statusCode == 202) {
-          controller.getStores();
+          controller.getStores(page: 1);
           loadingAdd.value = false;Get.back();
         } else {
           appErrorMessage(context, jsonDecode(val.body)['errors']);
         }
       });
 
-      }else
-    await ApiConnect().postDataFile('stores/$userId?_method=PUT', {
+      }else {
+      await ApiConnect().postDataFile('stores/$userId?_method=PUT', {
       "name": name,
       "description": description,
       // "user_id": userId,
@@ -173,12 +173,13 @@ class AddStoreController extends GetxController {
     },
         file: file).then((val) {
       if (val.statusCode == 201||val.statusCode == 200||val.statusCode == 202) {
-        controller.getStores();
+        controller.getStores(page: 1);
         loadingAdd.value = false;Get.back();
       } else {
         appErrorMessage(context, jsonDecode(val.body)['errors']);
       }
     });
+    }
     loadingAdd.value=false;
   }
   File? imagePath; // مسار الصورة

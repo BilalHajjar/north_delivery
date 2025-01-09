@@ -1,12 +1,15 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:delivary/core/colors.dart';
+import 'package:delivary/presentation/admin/store/model/list_model.dart';
 import 'package:delivary/presentation/admin/store/model/store_model.dart';
+import 'package:delivary/presentation/auth/screens/email_verification_screen.dart';
 import 'package:delivary/presentation/user/home/controller/home_user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../../widgets/custom_image.dart';
 import '../../product/components/product_user_component.dart';
 import '../../product/screen/product_user_screen.dart';
 import '../components/category_user_component.dart';
@@ -61,12 +64,8 @@ class AdsAndProductScreen extends StatelessWidget {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              i.imageUrl!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
+                            child: CustomImage(image:  i.imageUrl!,)
+
                           ),
                         );
                       },
@@ -78,9 +77,11 @@ class AdsAndProductScreen extends StatelessWidget {
                 baseColor: Colors.grey,
                 highlightColor: Colors.white,
                 child: Container(
+                  margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                    color: Colors.blue,),
                   height: 200.0,
                   width: double.infinity,
-                  color: Colors.blue,
                 ),
               );
             },
@@ -91,7 +92,7 @@ class AdsAndProductScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Icon(Icons.keyboard_arrow_left_sharp),
+                const Icon(Icons.keyboard_arrow_left_sharp),
                 GestureDetector(
                   onTap: () {
                     controller.current.value = 0;
@@ -112,14 +113,17 @@ class AdsAndProductScreen extends StatelessWidget {
                   itemCount: logic.storeList.take(5).length,
                   itemBuilder: (BuildContext context, int index) {
                     var store = logic.storeList[index];
+
                     return InkWell(
                       onTap: () {
+
                         Get.to(ProductUserScreen(
                           store: logic.storeList[index],
+
                         ));
                       },
                       child:Hero(
-                        tag: 'store-${logic.storeList[index].id}',
+                        tag: 'store-${store.id}', // جعل tag فريدًا باستخدام الفهرس
                         child: Container(
                           width: 140,
                           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
@@ -132,13 +136,11 @@ class AdsAndProductScreen extends StatelessWidget {
                                 offset: const Offset(0, 5),
                               ),
                             ],
-                            image: DecorationImage(
-                              image: NetworkImage(store.imageUrl!),
-                              fit: BoxFit.cover,
-                            ),
                           ),
                           child: Stack(
                             children: [
+    ClipRRect(                            borderRadius: BorderRadius.circular(20),
+        child: CustomImage(image: store.imageUrl!)),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
@@ -209,13 +211,53 @@ class AdsAndProductScreen extends StatelessWidget {
                 ),
               );
             }
+            else if(logic.isAuth==false) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Center(child: const Text("تنبيه")),
+                    content:
+                        const Text("يرجى تأكيد حسابك عبر البريد.",textDirection: TextDirection.rtl,),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.offAll(EmailVerificationScreen(email: null)),
+                        child: const Text("حسنًا"),
+                      ),
+                    ],
+                  ),
+                );
+              });
+            }
             return Shimmer.fromColors(
               baseColor: Colors.grey,
               highlightColor: Colors.white,
-              child: Container(
-                height: 150.0,
-                width: double.infinity,
-                color: Colors.blue,
+              child: SingleChildScrollView(scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Container(
+                      height: 140.0,
+                      width: 140,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue,),
+                    ),
+                    Container(
+                      height: 140.0,
+                      width: 140,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue,),
+                    ),
+                    Container(
+                      height: 140.0,
+                      width: 140,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue,),
+                    ),
+                  ],
+                ),
               ),
             );
           }),
@@ -237,19 +279,21 @@ class AdsAndProductScreen extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 child: GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics:const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // عدد العناصر في كل صف
-                    crossAxisSpacing: 8.0, // التباعد الأفقي بين العناصر
-                    mainAxisSpacing: 8.0, // التباعد الرأسي بين العناصر
-                    childAspectRatio: 3 / 2, // نسبة العرض إلى الارتفاع
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                    childAspectRatio: 3 / 2,
                   ),
                   itemCount:controller. categoryList.length,
                   itemBuilder: (context, index) {
                     final category = controller. categoryList[index];
                     return InkWell (
                         onTap: (){
-                  controller.changePage(0);
+                          controller.tempForMySelectCategory=ListModel(id: category.id!,name: category.name!) ;
+
+                          controller.changePage(0);
                         },
                         child: CategoryUserComponent(categoryModel: category));
                   },
@@ -259,10 +303,24 @@ class AdsAndProductScreen extends StatelessWidget {
             return Shimmer.fromColors(
               baseColor: Colors.grey,
               highlightColor: Colors.white,
-              child: Container(
-                height: 200.0,
-                width: double.infinity,
-                color: Colors.blue,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 200.0,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue,),
+                    ),
+                  ),Expanded(
+                    child: Container(
+                      height: 200.0,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue,),
+                    ),
+                  ),
+                ],
               ),
             );
           }),
@@ -271,3 +329,4 @@ class AdsAndProductScreen extends StatelessWidget {
     );
   }
 }
+

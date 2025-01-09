@@ -8,6 +8,7 @@ import 'package:delivary/presentation/admin/user_maneger/screens/users_screen.da
 import 'package:delivary/presentation/auth/screens/login_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class HomeController extends GetxController {
   // List<Widget> adminScreens = [AdsScreen(), UsersScreen(), SettingScreen()];
@@ -21,10 +22,13 @@ class HomeController extends GetxController {
   }
   logout(context)async{
     waitLogout.value=true;
-    await ApiConnect().postData('logout', {}).then((val){
+    await ApiConnect().postData('logout', {
+
+    }).then((val){
 
     if(val.statusCode==200)
-      {
+      {OneSignal.logout();
+
         Get.offAll(LoginScreens());
         CacheHelper.removeData(key: 'token');
       }else{

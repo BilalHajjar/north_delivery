@@ -3,13 +3,15 @@ import 'dart:convert';
 import 'package:delivary/core/api_connect.dart';
 import 'package:delivary/presentation/admin/ads_maneger/model/ads_model.dart';
 import 'package:delivary/presentation/admin/store/model/store_model.dart';
-import 'package:delivary/presentation/store_owner/products/model/product_model.dart';
 import 'package:get/get.dart';
+import '../../../admin/store/model/list_model.dart';
 class HomeUserController extends GetxController {
   List<AdsModel> adsList = [];
   List<CategoryModel> categoryList = [];
   List<StoreModel> storeList = [];
+  bool isAuth=true;
   bool isLoading = false;
+  ListModel? tempForMySelectCategory;
 
   @override
   void onInit() {
@@ -55,12 +57,16 @@ class HomeUserController extends GetxController {
 
   Future<void> getAllProduct() async {
     try {
+
       var response = await ApiConnect().getData('all-categories');
+
       if (response.statusCode == 200) {
         var products = jsonDecode(response.body)['data'];
         categoryList = products
             .map<CategoryModel>((product) => CategoryModel.fromJson(product))
             .toList();
+      }else if(response.statusCode==403){
+isAuth=false;
       }
     } catch (e) {
     }

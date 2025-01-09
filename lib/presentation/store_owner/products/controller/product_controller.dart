@@ -9,23 +9,37 @@ import 'package:get/get.dart';
 class ProductController extends GetxController {
   List<ProductModel> productList = [];
   RxBool isLoading = true.obs;
-
+  String? hasMode;
+  int currentPage=1;
+  final scroll=ScrollController();
   @override
   onInit() {
     super.onInit();
     getProduct();
+       scroll.addListener((){
+      if(scroll.position.maxScrollExtent==scroll.offset){
+
+          int page=++currentPage;
+          getProduct(page: page++);
+    }});
   }
 
-  getProduct() async {
+  getProduct({int page = 1}) async {
+    if (page == 1)
+    {
+      productList.clear();
+    }
     isLoading.value = true;
     try {
-      final response = await ApiConnect().getData('products');
+      final response = await ApiConnect().getData('products?page=$page');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body)['data']['data'];
-        productList =
-            data.map<ProductModel>((ad) => ProductModel.fromJson(ad)).toList();
+
+        for(var val in data){
+          productList.add(ProductModel.fromJson(val));
+        }
+        hasMode = jsonDecode(response.body)['data']['next_page_url'];
       } else {
-        Get.snackbar('خطأ', jsonDecode(response.body)['message']);
       }
     } catch (e) {
       Get.snackbar('خطأ', 'تعذر جلب المنتجات. تحقق من اتصال الشبكة.');
@@ -41,14 +55,15 @@ class ProductController extends GetxController {
     try {
       final response = await ApiConnect().deleteData('products/$id');
       if (response.statusCode == 200) {
-        getProduct();
+        getProduct(page: 1);
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
-        Get.snackbar('خطأ', jsonDecode(response.body)['message']);
+        appErrorMessage(context, jsonDecode(response.body)['message']);
       }
     } catch (e) {
-      Get.snackbar('خطأ', 'تعذر جلب الإعلانات. تحقق من اتصال الشبكة.');
+
+      appErrorMessage(context,'تعذر جلب الإعلانات. تحقق من اتصال الشبكة.');
     } finally {
       waitingDelete.value = false;
     }
@@ -56,7 +71,7 @@ class ProductController extends GetxController {
 
   RxBool waitingAdd = false.obs;
 
-  addProduct(
+  addProduct(context,
       {required String name,
       required String description,
       required String price,
@@ -74,19 +89,19 @@ class ProductController extends GetxController {
         .then((value) {
       waitingAdd.value = false;
       if (value.statusCode == 201) {
-        getProduct();
+        getProduct(page: 1);
         Get.back();
-        Get.snackbar('تم', 'تمت إضافة المنتج بنجاح');
+        appErrorMessage(context, 'تمت إضافة المنتج بنجاح',title: 'تم');
       } else {
-        Get.snackbar('خطأ', jsonDecode(value.body)['message']);
+        appErrorMessage(context, jsonDecode(value.body)['message']);
       }
     }).catchError((e) {
       waitingAdd.value = false;
-      Get.snackbar('خطأ', 'تعذرت الاضافة. تحقق من اتصال الشبكة.');
+      appErrorMessage(context, 'تعذرت الاضافة. تحقق من اتصال الشبكة.');
     });
   }
 
-  updateProduct(
+  updateProduct(context,
       {required int id,
       required String name,
       required String description,
@@ -117,13 +132,13 @@ class ProductController extends GetxController {
             },);
       }
       if (value.statusCode == 201 || value.statusCode == 200) {
-      getProduct();
+      getProduct(page: 1);
       Get.back();
-      Get.snackbar('تم', 'تمت إضافة المنتج بنجاح');
+      appErrorMessage(context, 'تم تعديل المنتج بنجاح',title: 'تم');
     } else {
-      Get.snackbar('خطأ', jsonDecode(value.body)['message']);
+        appErrorMessage(context, jsonDecode(value.body)['message']);
     }}catch(e){
-      Get.snackbar('خطأ', 'تعذر التعديل. تحقق من اتصال الشبكة.');
+      appErrorMessage(context,'تعذر التعديل. تحقق من اتصال الشبكة.');
     }finally{
 
       waitingAdd.value=false;

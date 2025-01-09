@@ -7,6 +7,7 @@ import 'package:delivary/presentation/admin/store/controller/add_store_controlle
 import 'package:delivary/presentation/admin/store/controller/store_controller.dart';
 import 'package:delivary/presentation/admin/store/model/store_model.dart';
 import 'package:delivary/widgets/button_widget.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:delivary/widgets/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,10 +17,9 @@ import 'package:image_picker/image_picker.dart';
 import '../components/user_combo_box.dart';
 
 class AddStoreScreen extends StatefulWidget {
-  AddStoreScreen({super.key, this.storeModel, required this.storeController});
+  AddStoreScreen({super.key, this.storeModel, });
 
   StoreModel? storeModel;
-  final StoreController storeController;
 
   @override
   State<AddStoreScreen> createState() => _AddStoreScreenState();
@@ -28,8 +28,9 @@ class AddStoreScreen extends StatefulWidget {
 class _AddStoreScreenState extends State<AddStoreScreen> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
-  final ImageCropper _cropper = ImageCropper(); // تعريف كائن لمكتبة قص الصور
+  final ImageCropper _cropper = ImageCropper();
 
+   StoreController storeController=Get.find();
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
@@ -127,13 +128,13 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                         Obx(() {
                           return TextButton(
                             onPressed: () {
-                              widget.storeController.deleteStore(
+                              storeController.deleteStore(
                                   context, widget.storeModel!.id!);
                             },
                             child: Text(
                               'حذف',
                               style: TextStyle(
-                                  color: widget.storeController
+                                  color: storeController
                                       .waitStoreList.value
                                       ? AppColors.grey
                                       : null),
@@ -184,25 +185,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                       child:
                       widget.storeModel != null && _image == null
                           ? Center(
-                        child: Image.network(
-                          widget.storeModel!.imageUrl!,
-                          errorBuilder: (con, ob, t) {
-                            return Container(
-                              width: 120,
-                              height: 120,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: AppColors.grey.withOpacity(0.5),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.image_search,
-                                  size: 30,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                        child: CustomImage(image:  widget.storeModel!.imageUrl!),
                       )
                           : _image == null
                           ? const Center(child: Icon(Icons.camera_alt))
@@ -276,7 +259,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                             regionIid: controller.selectedRegion!.id!,
                             file: _image!,
                             categories: tempCategory,
-                            controller: widget.storeController)
+                            controller: storeController)
                             : controller.updateStore(
                             context,
                             name: nameController.text,
@@ -285,7 +268,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                             regionIid: controller.selectedRegion!.id!,
                             file: _image,
                             categories: tempCategory,
-                            controller: widget.storeController);
+                            controller: storeController);
                       },
                     );
                   }),

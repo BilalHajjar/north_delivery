@@ -1,5 +1,7 @@
+import 'package:delivary/core/colors.dart';
 import 'package:delivary/core/not_found.dart';
 import 'package:delivary/widgets/button_widget.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -62,10 +64,7 @@ class CartScreen extends StatelessWidget {
                               child: SizedBox(
                                 width: 70,
                                 height: 70,
-                                child: Image.network(
-                                  '${cartItem.product!.imageUrl!}',
-                                  fit: BoxFit.cover,
-                                ),
+                                child: CustomImage(image: '${cartItem.product!.imageUrl!}'),
                               ),
                             ),
                             SizedBox(width: 10),
@@ -232,7 +231,7 @@ class CartScreen extends StatelessWidget {
                       },
                       icon: locationFetched.value
                           ? Icon(Icons.check_circle, color: Colors.green)
-                          : Icon(Icons.location_on, color: Colors.white),
+                          : Icon(Icons.location_on, color: AppColors.primaColor),
                       label: Text(locationFetched.value
                           ? 'تم تحديد الموقع'
                           : 'تحديد الموقع'),
@@ -248,7 +247,7 @@ class CartScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: AppColors.primaColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
@@ -266,6 +265,7 @@ class CartScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),

@@ -53,7 +53,7 @@ class _AddToCardItemState extends State<AddToCardItem> {
             color: AppColors.primaColor,
           ),
           child: widget.productModel.inCart!
-              ? Row(
+              ? const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
@@ -61,12 +61,12 @@ class _AddToCardItemState extends State<AddToCardItem> {
                 size: 15,
               ),
               Text(
-                '  زيادة العدد؟ً',
+                '  زيادة العدد؟',
                 style: TextStyle(),
               )
             ],
           )
-              : Row(
+              : const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
@@ -96,7 +96,7 @@ class _AddToCardItemState extends State<AddToCardItem> {
                   return Directionality(
                     textDirection: TextDirection.rtl,
                     child: AlertDialog(
-                      title: Text(
+                      title: const Text(
                         'إجمالي العدد',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
@@ -104,7 +104,7 @@ class _AddToCardItemState extends State<AddToCardItem> {
                       content: TextField(
                         controller: controllerEdit,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'أدخل العدد الجديد',
                           border: OutlineInputBorder(),
                         ),
@@ -114,7 +114,7 @@ class _AddToCardItemState extends State<AddToCardItem> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text(
+                          child: const Text(
                             'رجوع',
                             style: TextStyle(color: Colors.grey),
                           ),
@@ -140,14 +140,14 @@ class _AddToCardItemState extends State<AddToCardItem> {
             child: Container(
               height: 30,
               width: 30,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.orange,
               ),
-              child: Icon(Icons.edit, color: Colors.white, size: 15),
+              child: const Icon(Icons.edit, color: Colors.white, size: 15),
             ),
           ),
-          SizedBox(width: 2),
+          const SizedBox(width: 2),
           InkWell(
             onTap: () {
               setState(() {
@@ -157,7 +157,7 @@ class _AddToCardItemState extends State<AddToCardItem> {
             child: Container(
               height: 30,
               width: 30,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.orange,
               ),
@@ -165,10 +165,10 @@ class _AddToCardItemState extends State<AddToCardItem> {
                   color: Colors.white, size: 15),
             ),
           ),
-          SizedBox(width: 2),
+          const SizedBox(width: 2),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 2),
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            margin:const EdgeInsets.symmetric(horizontal: 2),
+            padding:const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(5),
@@ -212,7 +212,7 @@ class _AddToCardItemState extends State<AddToCardItem> {
                   isLoading = false;
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text('لا يوجد اتصال بالإنترنت'),
                     backgroundColor: Colors.red,
                   ),

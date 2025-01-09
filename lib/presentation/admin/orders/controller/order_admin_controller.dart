@@ -8,16 +8,31 @@ import '../model/order_admin_model.dart';
 class OrderAdminController extends GetxController {
   RxList<OrderAdminModel> orders = <OrderAdminModel>[].obs;
   RxBool isLoading = false.obs;
+  int currentPage=1;
+  final scroll=ScrollController();
+  String? hasMode;
+  onInit() {
+    super.onInit();
+    // fetchOrders();
+    scroll.addListener((){
+      if(scroll.position.maxScrollExtent==scroll.offset){
 
+          int page=currentPage++;
+          fetchOrders(page:page++);
+    }});
+  }
   // تحميل الطلبات
-  Future<void> fetchOrders() async {
+  Future<void> fetchOrders({int page=1}) async {
     try {
       isLoading.value = true;
-      final response = await ApiConnect().getData('orders');
+      final response = await ApiConnect().getData('orders?page=$page');
       if(response.statusCode==200) {
         final List<dynamic> jsonData = jsonDecode(response.body)['orders']['data'];
-        orders.value =
-            jsonData.map((item) => OrderAdminModel.fromJson(item)).toList();
+
+        hasMode = jsonDecode(response.body)['orders']['next_page_url'];
+        for(var ad in jsonData) {
+          orders.add(OrderAdminModel.fromJson(ad));
+        }
       }
       else{
         // Get.snackbar('خطأ', '${ jsonDecode(response.body)['message']}');
@@ -67,13 +82,13 @@ class OrderAdminController extends GetxController {
 
 
   // حذف الطلب
-  Future<void> deleteOrder(int orderId) async {
+  Future<void> deleteOrder(int orderId,context) async {
     try {
       await ApiConnect().deleteData('orders/$orderId');
       orders.removeWhere((order) => order.id == orderId);
-      Get.snackbar('تم', 'تم حذف الطلب بنجاح');
+      appErrorMessage(context, 'تم حذف الطلب بنجاح');
     } catch (e) {
-      Get.snackbar('خطأ', 'فشل في حذف الطلب: $e');
+      appErrorMessage(context, 'فشل في حذف الطلب: $e');
     }
   }
 }

@@ -17,7 +17,7 @@ class OrderAdminScreen extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Obx(() {
-        if (controller.isLoading.value) {
+        if (controller.isLoading.value&&controller.currentPage==1) {
           return const Center(child: CircularProgressIndicator());
         }
 
@@ -26,12 +26,22 @@ class OrderAdminScreen extends StatelessWidget {
         }
 
         return RefreshIndicator(
-          onRefresh: controller.fetchOrders, // التحديث عند السحب للأسفل
+          onRefresh: () async{
+
+            controller.orders.value=[];
+            controller.currentPage=1;
+            controller.fetchOrders();
+          }, // التحديث عند السحب للأسفل
           child: ListView.builder(
-            itemCount: controller.orders.length,
+            itemCount: controller.orders.length+1,
             itemBuilder: (context, index) {
-              final order = controller.orders[index];
-              return OrderComponent(order: order, controller: controller);
+              if(index<controller.orders.length) {final order = controller.orders[index];
+              return OrderComponent(order: order, controller: controller);} else {
+                  if(controller.hasMode==null)
+                    return SizedBox();
+                  else
+                  return Center(child: CircularProgressIndicator(),);
+                }
             },
           ),
         );

@@ -18,16 +18,6 @@ class HomeStoreScreen extends StatelessWidget {
 
   final UserModel userModel;
 
-  List<Widget> storeScreens = [
-    const ProductsScreen(),
-    // const StoreScreen(),
-    // UsersScreen(),
-    // AdsScreen(),
-    // SettingScreen()
-  ];
-  List<String> appBar = [
-    'المنتجات',
-  ];
 
   SettingController controller = Get.put(SettingController());
 
@@ -35,19 +25,10 @@ class HomeStoreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: GetBuilder(
-          init: HomeController(),
-          builder: (logic) {
-            return Text(appBar[logic.currentScreen]);
-          },
-        ),
+        title:Text('المنتجات')
+
       ),
-      body: GetBuilder(
-        init: HomeController(),
-        builder: (logic) {
-          return storeScreens[logic.currentScreen];
-        },
-      ),
+      body: ProductsScreen(),
       endDrawer: Drawer(child: CustomStoreDrawer(userModel: userModel)),
     );
   }

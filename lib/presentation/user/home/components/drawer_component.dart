@@ -24,7 +24,7 @@ class CustomStoreDrawer extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
-        color: Color(0xffefefef),
+        color: Color(0xfff0f0f0),
         child: Column(
           children: <Widget>[
             // الجزء العلوي (صورة المستخدم)
@@ -41,9 +41,16 @@ class CustomStoreDrawer extends StatelessWidget {
                   begin: Alignment.bottomLeft,
                 ),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -193,8 +200,7 @@ class CustomStoreDrawer extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                                          Text('كلمة المرور الحالية'),
-
+                                      Text('كلمة المرور الحالية'),
                                       PasswordTextField(
                                         controller:
                                         currentPasswordController,
@@ -202,16 +208,14 @@ class CustomStoreDrawer extends StatelessWidget {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                                        Text('كلمة المرور الجديدة'),
-
+                                      Text('كلمة المرور الجديدة'),
                                       PasswordTextField(
                                         controller: passwordController,
                                       ),
                                       SizedBox(
                                         height: 10,
                                       ),
-                                                        Text('تأكيد كلمة المرور'),
-
+                                      Text('تأكيد كلمة المرور'),
                                       PasswordTextField(
                                         controller:
                                         confirmPasswordController,
@@ -324,15 +328,13 @@ class CustomStoreDrawer extends StatelessWidget {
                         children: [
                           _socialButton(
                             icon: FontAwesomeIcons.whatsapp,
-                            url:
-                            '',
+                            url: '',
                             color: Colors.green,
                           ),
                           SizedBox(width: 20),
                           _socialButton(
                             icon: FontAwesomeIcons.facebook,
-                            url:
-                            '',
+                            url: '',
                             color: Colors.blue,
                           ),
                         ],
@@ -342,16 +344,13 @@ class CustomStoreDrawer extends StatelessWidget {
                       children: [
                         _socialButton(
                           icon: FontAwesomeIcons.whatsapp,
-                          url:
-                          'https://wa.me/${settingController.settingModel!
-                              .phone}',
+                          url: 'https://wa.me/${settingController.settingModel!.phone}',
                           color: Colors.green,
                         ),
                         SizedBox(width: 20),
                         _socialButton(
                           icon: FontAwesomeIcons.facebook,
-                          url:
-                          '${settingController.settingModel!.facebook}',
+                          url: '${settingController.settingModel!.facebook}',
                           color: Colors.blue,
                         ),
                       ],
@@ -367,14 +366,12 @@ class CustomStoreDrawer extends StatelessWidget {
     );
   }
 
-  Widget _createCardItem({required IconData icon,
-    required String text,
-    required GestureTapCallback onTap}) {
+  Widget _createCardItem({required IconData icon, required String text, required GestureTapCallback onTap}) {
     return Card(
       color: AppColors.whiteColor,
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      // elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 4,
       child: ListTile(
         leading: Icon(icon, color: AppColors.secondColor),
         title: Text(
@@ -386,11 +383,7 @@ class CustomStoreDrawer extends StatelessWidget {
     );
   }
 
-  Widget _socialButton({
-    required IconData icon,
-    required String url,
-    required Color color,
-  }) {
+  Widget _socialButton({required IconData icon, required String url, required Color color}) {
     return GestureDetector(
       onTap: () async {
         if (await canLaunch(url)) {
