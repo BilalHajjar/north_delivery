@@ -5,6 +5,8 @@ import 'package:delivary/widgets/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 class SettingScreen extends StatelessWidget {
   SettingScreen({super.key});
@@ -15,8 +17,10 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    phoneController.text=controller.settingModel!.phone!;
+    faceBookController.text=controller.settingModel!.facebook!;
     return Scaffold(
-      appBar: AppBar(title: Text('الإعدادات'),),
+      // appBar: AppBar(title: Text('الإعدادات'),),
       body: Directionality(textDirection: TextDirection.rtl,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -30,9 +34,15 @@ class SettingScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Expanded(child: OutLineButton(icn:FontAwesomeIcons.whatsapp , text: 'رقم الوتساب', func: () {  },)),
+                        Expanded(child: OutLineButton(icn:FontAwesomeIcons.whatsapp , text: 'رقم الوتساب', func: () async {
+                                await launch('https://wa.me/${controller.settingModel!.phone!}'); // فتح رابط WhatsApp
+
+                          // launchUrl( Uri.parse('https://flutter.dev'));
+                        },)),
                         SizedBox(width: 5,),
-                        Expanded(child: OutLineButton(icn: FontAwesomeIcons.facebook, text: 'صفحة الفيسبوك', func: () {  },)),
+                        Expanded(child: OutLineButton(icn: FontAwesomeIcons.facebook, text: 'صفحة الفيسبوك', func: () async {
+                                await launch('${controller.settingModel!.facebook}'); // فتح رابط WhatsApp
+                        },)),
                       ],
                     ),
 

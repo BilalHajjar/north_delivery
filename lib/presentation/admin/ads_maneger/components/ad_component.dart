@@ -1,6 +1,7 @@
 import 'package:delivary/core/colors.dart';
 import 'package:delivary/presentation/admin/ads_maneger/controller/ads_controller.dart';
 import 'package:delivary/presentation/admin/ads_maneger/model/ads_model.dart';
+import 'package:delivary/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,25 +17,18 @@ class AdsComponent extends StatelessWidget {
       color: AppColors.whiteColor,
       elevation: 5,
       margin: const EdgeInsets.all(10),
-      child: Directionality(textDirection: TextDirection.rtl,
+      child: Directionality(
+        textDirection: TextDirection.rtl,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: 150,
-              child: Image.network(
-                ad.imageUrl ?? '',
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                // loadingBuilder: (BuildContext c, Widget b, ImageChunkEvent? a) {
-                //   return Center(child: CircularProgressIndicator());
-                // },
-                errorBuilder: (BuildContext c, Object b, StackTrace? a) {
-                  return Center(child: Icon(Icons.error));
-                },
-
-              ),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  child: CustomImage(image: ad.imageUrl ?? '')),
             ),
             ListTile(
               title: Text(ad.isActive == 1 ? 'نشط' : 'غير نشط'),
@@ -42,23 +36,21 @@ class AdsComponent extends StatelessWidget {
               trailing: PopupMenuButton(
                 onSelected: (value) {
                   if (value == 'edit') {
-
                   } else if (value == 'delete') {
-                    controller.deleteAd(ad.id!);
+                    controller.deleteAd(ad.id!, context);
                   }
                 },
-                itemBuilder: (context) =>
-                [
-                   PopupMenuItem(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
                     value: 'edit',
-                    onTap: (){
-                      controller.toggleAdStatus(ad.id!);
+                    onTap: () {
+                      controller.toggleAdStatus(ad.id!,context);
                     },
                     child: Text('تغيير الحالة'),
                   ),
-                   PopupMenuItem(
-                    onTap: (){
-                      controller.deleteAd(ad.id!);
+                  PopupMenuItem(
+                    onTap: () {
+                      controller.deleteAd(ad.id!, context);
                     },
                     value: 'delete',
                     child: Text('حذف'),
@@ -71,25 +63,27 @@ class AdsComponent extends StatelessWidget {
       ),
     );
   }
-
 }
 
 void showAdDialog(BuildContext context) {
-  final TextEditingController imageController = TextEditingController();
+  // final TextEditingController imageController = TextEditingController();
   AdsController controller = Get.find();
   showDialog(
     context: context,
     builder: (context) {
-      controller.imagePath=null;
+      controller.imagePath = null;
       return AlertDialog(
         title: const Text('إضافة إعلان جديد'),
         content: GetBuilder<AdsController>(builder: (logic) {
-          if(logic.imagePath==null) {
-            return ElevatedButton(onPressed: () {
-            controller.pickImageFromGallery();
-          }, child: Text('حمل الصورة'));
-          }else{
-            return SingleChildScrollView(child: Center(child: Text('تم التحميل بنجاح')));
+          if (logic.imagePath == null) {
+            return ElevatedButton(
+                onPressed: () {
+                  controller.pickImageFromGallery();
+                },
+                child: Text('حمل الصورة'));
+          } else {
+            return SingleChildScrollView(
+                child: Center(child: Text('تم التحميل بنجاح')));
           }
         }),
         actions: [

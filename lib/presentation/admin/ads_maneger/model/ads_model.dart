@@ -34,3 +34,20 @@ class AdsModel {
     return data;
   }
 }
+List<Map<String,dynamic>> data=[
+  {
+    "id":1,
+    "name":"Ahmad",
+    "age":30.5,
+  },
+  {
+    "id":2,
+    "name":"Mstafa",
+    "age":20.5,
+  },
+  {
+    "id":3,
+    "name":"Ali",
+    "age":13.5,
+  },
+];

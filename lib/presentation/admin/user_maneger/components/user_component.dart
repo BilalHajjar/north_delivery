@@ -5,6 +5,7 @@ import 'package:delivary/presentation/admin/user_maneger/screens/add_user_screen
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserComponent extends StatelessWidget {
   const UserComponent({
@@ -37,11 +38,16 @@ final UserModel userModel;
               : Icons.assured_workload_sharp,
           color: AppColors.secondColor,
         ),
-        subtitle: Text(userModel.email!),
-        title: Text(userModel.name!),
-        trailing: Icon(
-          FontAwesomeIcons.whatsapp,
-          color: Colors.green,
+        subtitle: Text(userModel.email!,style: TextStyle(color: AppColors.grey),),
+        title: Text(userModel.name!,style: TextStyle(fontSize: 18),),
+        trailing: IconButton(onPressed: ()async{
+          await launch('https://wa.me/${userModel.phoneNumber}'); // فتح رابط WhatsApp
+
+        },
+          icon: Icon(
+            FontAwesomeIcons.whatsapp,
+            color: Colors.green,
+          ),
         ),
       ),
     );

@@ -5,6 +5,11 @@ class AppTheme {
   static ThemeData lightTheme() {
     return ThemeData(
         fontFamily: 'FontApp',
+        bottomSheetTheme: BottomSheetThemeData(backgroundColor: AppColors.whiteColor),
+        cardTheme: CardTheme(color: AppColors.whiteColor),
+        dialogTheme: DialogTheme(backgroundColor: AppColors.whiteColor),
+        scaffoldBackgroundColor: Color(0xfff3f2f2),
+        drawerTheme: DrawerThemeData(backgroundColor: AppColors.whiteColor),
         colorSchemeSeed: AppColors.primaColor,
         appBarTheme: AppBarTheme(centerTitle: true,backgroundColor: AppColors.primaColor),
         inputDecorationTheme: InputDecorationTheme(
@@ -20,11 +25,11 @@ class AppTheme {
           // enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.primaColor,
               )), focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.primaColor,
               )),
         ));

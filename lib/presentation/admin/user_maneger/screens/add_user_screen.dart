@@ -29,7 +29,7 @@ class AddUserScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('إضافة مستخدم'),
+        title: Text(userModel==null?'إضافة مستخدم':'تعديل المستخدم'),
       ),
       body: Center(
         child: Container(

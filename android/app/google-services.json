@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "616084783191",
+    "project_id": "delivery-b94f2",
+    "storage_bucket": "delivery-b94f2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616084783191:android:bd2ff7812e1a6f97c56312",
+        "android_client_info": {
+          "package_name": "com.bilalflutter.delivary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_1TpyYMNh_UhgmIuzFeAMStHLkxPS4lY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

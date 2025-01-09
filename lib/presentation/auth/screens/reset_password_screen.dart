@@ -1,6 +1,7 @@
 import 'package:delivary/core/colors.dart';
 import 'package:delivary/presentation/auth/screens/email_verification_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../widgets/button_widget.dart';
 import '../../../widgets/text_field_widget.dart';
 import '../components/password_widget.dart';
@@ -8,18 +9,19 @@ import 'package:get/get.dart';
 import '../controller/auth_controller.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  ResetPasswordScreen({super.key});
-
+  ResetPasswordScreen({super.key, required this.email});
+final String email;
   // Controllers for form fields
   TextEditingController emailController = TextEditingController();
   TextEditingController resetPasswordController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
   TextEditingController resetPasswordConfirmationController = TextEditingController();
   final List<TextEditingController> controllers =
   List.generate(6, (index) => TextEditingController());
   var formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {emailController.text=email;
     final AuthController authController = Get.find();
     return Scaffold(
       body: Padding(
@@ -65,9 +67,40 @@ class ResetPasswordScreen extends StatelessWidget {
                     // Verification Code TextField
                     const Text('أدخل رمز التحقق'),
                     const SizedBox(height: 10),
-                    SixDigitTextFieldWidget(
-                      controllerList: controllers,
+                Directionality(textDirection: TextDirection.ltr,
+                  child: PinCodeTextField(
+                    appContext: context,
+                    length: 6,
+                    controller: otpController,
+                    animationType: AnimationType.scale,
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                    },
+                    onCompleted: (value) {
+                    },
+                    cursorColor: AppColors.grey,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(5),
+                      fieldHeight: 50,
+                      fieldWidth: 40,
+                      activeFillColor: Colors.white,
+                      selectedFillColor: Colors.grey[200]!,
+                      // لون الخلفية للحقل المحدد
+                      inactiveFillColor: Colors.grey[300]!,
+                      // لون الخلفية للحقل غير المحدد
+                      activeColor: Colors.blue,
+                      // لون الحافة للحقل النشط
+                      selectedColor: AppColors.primaColor,
+                      // لون الحافة للحقل المحدد
+                      inactiveColor: Colors
+                          .grey, // لون الحافة للحقل غير المحدد
+                    ),
+                  ),
+                ),
                     const SizedBox(height: 15),
 
                     // New Password TextField
@@ -112,8 +145,7 @@ class ResetPasswordScreen extends StatelessWidget {
                         onTap: () {
 
                           if (formKey.currentState!.validate()) {
-                            String verificationCode = controllers.map((e) =>
-                            e.text).join('');
+                            String verificationCode = otpController.text;
 
                             authController.resetPassword(context,
                                 email: emailController.text,
@@ -134,7 +166,7 @@ class ResetPasswordScreen extends StatelessWidget {
                         return TextButton(
                           onPressed: authController.isButtonEnabledForgetPassword.value
                               ? () {
-                            authController.startCountdownForgetPassword();
+                            authController.startCountdownForgetPassword(context,emailController.text);
                           }
                               : null,
                           child: Row(

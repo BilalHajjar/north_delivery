@@ -134,63 +134,63 @@ class RegisterScreen extends StatelessWidget {
                           },
                         );
                       }),
-                      const SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          height: 55,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.primaColor),
-                            borderRadius: BorderRadius.circular(18),
-                            // color:AppColors.primaColor
-                          ),
-                          child: const Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'أنشئ باستخدام غوغل',
-                                ),
-                                SizedBox(width: 10),
-                                FaIcon(
-                                  FontAwesomeIcons.google,
-                                  color: Colors.orange,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      // const SizedBox(height: 20),
+                      // GestureDetector(
+                      //   onTap: () {},
+                      //   child: Container(
+                      //     height: 55,
+                      //     width: double.infinity,
+                      //     decoration: BoxDecoration(
+                      //       border: Border.all(color: AppColors.primaColor),
+                      //       borderRadius: BorderRadius.circular(18),
+                      //       // color:AppColors.primaColor
+                      //     ),
+                      //     child: const Center(
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.center,
+                      //         children: [
+                      //           Text(
+                      //             'أنشئ باستخدام غوغل',
+                      //           ),
+                      //           SizedBox(width: 10),
+                      //           FaIcon(
+                      //             FontAwesomeIcons.google,
+                      //             color: Colors.orange,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(height: 20),
 
                       // Register
-                      Center(
-                        child: RichText(
-                          text: TextSpan(
-                            text: "لديك حساب سابق؟   ",
-                            style: const TextStyle(
-                                color: Colors.black, fontFamily: 'FontApp'),
-                            children: [
-                              TextSpan(
-                                text: 'سجل الآن',
-                                style: const TextStyle(
-                                    color: Colors.orange,
-                                    fontFamily: 'FontApp'),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginScreens()),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      // Center(
+                      //   child: RichText(
+                      //     text: TextSpan(
+                      //       text: "لديك حساب سابق؟   ",
+                      //       style: const TextStyle(
+                      //           color: Colors.black, fontFamily: 'FontApp'),
+                      //       children: [
+                      //         TextSpan(
+                      //           text: 'سجل الآن',
+                      //           style: const TextStyle(
+                      //               color: Colors.orange,
+                      //               fontFamily: 'FontApp'),
+                      //           recognizer: TapGestureRecognizer()
+                      //             ..onTap = () {
+                      //               Navigator.pushReplacement(
+                      //                 context,
+                      //                 MaterialPageRoute(
+                      //                     builder: (context) => LoginScreens()),
+                      //               );
+                      //             },
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 20),
                     ],
                   ),
                 ),
