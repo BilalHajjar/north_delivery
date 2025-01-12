@@ -111,6 +111,7 @@ class _OrderComponentState extends State<OrderComponent> {
 رقم الهاتف: ${widget.order.phoneNumber ?? "غير متوفر"}
 القيمة: ${widget.order.totalPrice ?? "0"}
 عدد العناصر: ${widget.order.orderItemsCount ?? 0}
+الملاحظات: ${widget.order.notes ?? 0}
 
 تفاصيل العناصر:
 ${widget.order.orderItems!.map((item) => '''

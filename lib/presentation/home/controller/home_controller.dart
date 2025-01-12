@@ -62,7 +62,7 @@ class HomeController extends GetxController {
       "password_confirmation": "${passwordConfirmation}",
     }).then((value) {
       if (value.statusCode == 200)
-        appErrorMessage(context, 'تم التعديل بنجاح');
+        appErrorMessage(context, 'تم التعديل بنجاح',title: 'تم');
       else {
         appErrorMessage(context, '${jsonDecode(value.body)['message']}');
       }

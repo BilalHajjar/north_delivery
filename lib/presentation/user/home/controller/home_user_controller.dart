@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:delivary/core/api_connect.dart';
 import 'package:delivary/presentation/admin/ads_maneger/model/ads_model.dart';
 import 'package:delivary/presentation/admin/store/model/store_model.dart';
+import 'package:delivary/presentation/auth/screens/login_screens.dart';
 import 'package:get/get.dart';
 import '../../../admin/store/model/list_model.dart';
 class HomeUserController extends GetxController {
@@ -65,8 +66,11 @@ class HomeUserController extends GetxController {
         categoryList = products
             .map<CategoryModel>((product) => CategoryModel.fromJson(product))
             .toList();
-      }else if(response.statusCode==403){
+      }else if(jsonDecode(response.body)['message']=='لم يتم تأكيد عنوان بريدك الإلكتروني.'){
 isAuth=false;
+update();
+      }else if(jsonDecode(response.body)['message']=='ليس لديك الصلاحية المطلوبة.'){
+        Get.offAll(LoginScreens());
       }
     } catch (e) {
     }

@@ -113,7 +113,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إضافة متجر'),
+        title:  Text(widget.storeModel!=null?'${widget.storeModel!.user!.name!}':'إضافة متجر'),
         actions: [
           if (widget.storeModel != null)
             IconButton(

@@ -37,10 +37,10 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) {
-              if (role == 'admin')
+              if (role == 'admin') {
                 return
                   HomeAdminScreen(userModel: userModel);
-              else if (role == 'user')
+              } else if (role == 'user')
                 return HomeUserScreen(userModel: userModel);
               else
                 return HomeStoreScreen(userModel: userModel);
@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       height: 200,
                       child: Image.asset('assets/images/logo1.png')),
                   SizedBox(height: 20),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
